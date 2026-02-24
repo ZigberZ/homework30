@@ -18,9 +18,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto){
     return this.prisma.user.create({data: createUserDto});
   }
-  async update(id: string, updateUserDto: UpdateUserDto){
-    return this.prisma.user.update({where: {id}, data: updateUserDto});
-  }
+  
   async remove(id: string){
     return this.prisma.user.delete({where: {id}});
   }
