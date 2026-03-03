@@ -7,18 +7,48 @@ datasource db {
 }
 
 model Movie {
-  id    String @id @default(uuid())
-  title String
+  id      String   @id @default(uuid())
+  title   String
+  year    Int?
+  reviews Review[]
+  genre   Genre?   @relation(fields: [genreId], references: [id])
+  genreId Int?
+
+  @@index([year])
+  @@index([title])
+  @@index([title, year])
 }
 
 model User{
-  id    String @id @default(uuid())
-  name String
-  email String @unique
+  id      String   @id @default(uuid())
+  name    String
+  email   String   @unique
+  password String 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reviews Review[]
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movieId String
+  movie   Movie   @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  userId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, userId])
 }
 model Genre {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  movies Movie[]
 }
 
 //решил не создавать новый проект чтобы сделать домашнее задание из за этого пишу здесь
